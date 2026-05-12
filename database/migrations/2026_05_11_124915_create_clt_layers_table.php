@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('thickness');
             $table->string('width');
             $table->string('angle');
+            $table->string('grade');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

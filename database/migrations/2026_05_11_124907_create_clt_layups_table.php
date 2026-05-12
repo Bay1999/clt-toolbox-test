@@ -15,7 +15,11 @@ return new class extends Migration
             $table->id();
             $table->foreignId('supplier_id')->constrained('suppliers')->onDelete('cascade');
             $table->string('name');
+            $table->string('grade');
+            $table->integer('revision_counter');
+            $table->tinyInteger('is_active')->default(0);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
