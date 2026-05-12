@@ -2,13 +2,19 @@
     <x-slot name="header">
         <header>
             <div class="max-w-6xl mx-auto py-10 px-4 sm:px-6 lg:px-8">
-                <div class="flex items-center gap-2">
-                    <p class="text-sm text-gray-600 dark:text-gray-400">
-                        {{ __('Supplier') }} /
-                    </p>
-                    <p class="text-sm text-gray-800 dark:text-gray-100 font-semibold">
-                        {{ $supplier->name }}
-                    </p>
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <p class="text-sm text-gray-600 dark:text-gray-400">
+                            {{ __('Supplier') }} /
+                        </p>
+                        <p class="text-sm text-gray-800 dark:text-gray-100 font-semibold">
+                            {{ $supplier->name }}
+                        </p>
+                    </div>
+                    <a href="{{ route('supplier.index') }}" class="px-4 py-1 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                        <i class="fa-solid fa-arrow-left"></i>
+                        Back
+                    </a>
                 </div>
             </div>
         </header>
@@ -177,7 +183,7 @@
                     columns: [{
                             data: 'name',
                             render: function(data, type, row) {
-                                return `<div class="font-bold text-gray-900 dark:text-white">${data}</div>`;
+                                return `<a href="/clt-layup/${row.id}" class="font-bold text-gray-900 dark:text-white hover:text-[var(--main-color)] transition-colors">${data}</a>`;
                             }
                         },
                         {
@@ -544,7 +550,7 @@
             });
         </script>
     @endpush
-
+    
     {{-- Layup Form Modal --}}
     <x-modal name="layup-form-modal" focusable>
         <div class="p-6">

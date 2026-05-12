@@ -111,15 +111,15 @@
                             data: 'name',
                             render: function(data, type, row) {
                                 return `
-                                    <div class="flex items-center space-x-3">
+                                    <a href="/supplier/${row.id}" class="flex items-center space-x-3 p-1 -m-1 rounded transition-colors">
                                         <div class="w-10 h-10 rounded-full bg-${row.avatar_color}-100 flex items-center justify-center text-${row.avatar_color}-600 font-bold text-xs uppercase">
                                             ${row.initials}
                                         </div>
                                         <div>
-                                            <div class="font-bold text-gray-900 dark:text-white">${data}</div>
+                                            <div class="font-bold text-gray-900 dark:text-white hover:text-[var(--main-color)]">${data}</div>
                                             <div class="text-xs text-gray-500">${row.supplier_id}</div>
                                         </div>
-                                    </div>
+                                    </a>
                                 `;
                             }
                         },

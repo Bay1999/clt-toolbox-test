@@ -111,4 +111,37 @@ class CltLayerController extends Controller
             ], 500);
         }
     }
+
+    public function syncLayers(Request $request, $layupId)
+    {
+        try {
+            $validated = $request->validate([
+                'layers' => 'present|array',
+                'layers.*.id' => 'nullable|integer',
+                'layers.*.thickness' => 'required|numeric',
+                'layers.*.width' => 'required|numeric',
+                'layers.*.angle' => 'required|numeric',
+                'layers.*.grade' => 'required|string|max:255',
+            ]);
+
+            $layers = $this->cltLayerService->syncLayers((int)$layupId, $validated['layers']);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Layers synchronized successfully',
+                'data' => $layers
+            ], 200);
+        } catch (InvalidAppFlowException $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ], 400);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage() . ' on line ' . $e->getLine() . ' on file ' . $e->getFile());
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Internal server error'
+            ], 500);
+        }
+    }
 }

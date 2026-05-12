@@ -74,9 +74,17 @@ class SupplierController extends Controller
      */
     public function show(Supplier $supplier)
     {
-        $data = $this->supplierService->getShowData($supplier->id);
-
-        return view('supplier.show', $data);
+        
+        try {
+            $data = $this->supplierService->getShowData($supplier->id);
+            // dd($data);
+            return view('supplier.show', $data);
+        } catch (InvalidAppFlowException $e) {
+            abort(404, $e->getMessage());
+        } catch (\Exception $e) {
+            Log::error($e->getMessage() . ' on line ' . $e->getLine() . ' on file ' . $e->getFile());
+            abort(500);
+        }
     }
 
     /**

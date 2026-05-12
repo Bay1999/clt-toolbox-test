@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Exceptions\InvalidAppFlowException;
 use App\Services\CltLayupService;
 use Illuminate\Support\Facades\Log;
+use App\Models\CltLayup;
 
 class CltLayupController extends Controller
 {
@@ -18,8 +19,24 @@ class CltLayupController extends Controller
 
     public function getData(Request $request)
     {
-        $supplierId = $request->query('supplier_id');
-        return $this->cltLayupService->getDataTable($supplierId, $request->query('search'));
+        try {
+            $supplierId = $request->query('supplier_id');
+            if (!$supplierId) {
+                throw new InvalidAppFlowException('Supplier ID is required');
+            }
+            return $this->cltLayupService->getDataTable((int)$supplierId, $request->query('search'));
+        } catch (InvalidAppFlowException $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ], 400);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage() . ' on line ' . $e->getLine() . ' on file ' . $e->getFile());
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Internal server error'
+            ], 500);
+        }
     }
 
     /**
@@ -73,15 +90,32 @@ class CltLayupController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(CltLayup $cltLayup)
+    public function show(int $id)
     {
-        return response()->json($cltLayup);
+        try {
+            $data = $this->cltLayupService->getShowData($id);
+            return view('layup.show', $data);
+        } catch (InvalidAppFlowException $e) {
+            abort(404, $e->getMessage());
+        } catch (\Exception $e) {
+            Log::error($e->getMessage() . ' on line ' . $e->getLine() . ' on file ' . $e->getFile());
+            abort(500);
+        }
+    }
+
+    /**
+     * Get detail of the specified resource in JSON.
+     */
+    public function getDetail(int $id)
+    {
+        $layup = $this->cltLayupService->getById($id);
+        return response()->json($layup);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(CltLayup $cltLayup)
+    public function edit(int $id)
     {
         //
     }
@@ -153,9 +187,17 @@ class CltLayupController extends Controller
                 'status' => 'success',
                 'message' => 'Status updated successfully'
             ]);
+        } catch (InvalidAppFlowException $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ], 400);
         } catch (\Exception $e) {
             Log::error($e->getMessage());
-            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Internal server error'
+            ], 500);
         }
     }
 
@@ -168,9 +210,17 @@ class CltLayupController extends Controller
                 'status' => 'success',
                 'message' => 'Layup restored successfully'
             ]);
+        } catch (InvalidAppFlowException $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ], 400);
         } catch (\Exception $e) {
             Log::error($e->getMessage());
-            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Internal server error'
+            ], 500);
         }
     }
 }

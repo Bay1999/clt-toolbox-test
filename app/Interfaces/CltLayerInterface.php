@@ -10,4 +10,5 @@ interface CltLayerInterface
     public function update(int $id, array $data);
     public function delete(int $id);
     public function getByLayupId(int $layupId);
+    public function syncLayers(int $layupId, array $layersData);
 }

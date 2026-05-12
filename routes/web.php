@@ -23,8 +23,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('supplier', SupplierController::class);
 
     Route::get('clt-layup/data', [CltLayupController::class, 'getData'])->name('clt-layup.data');
+    Route::get('clt-layup/{id}/detail', [CltLayupController::class, 'getDetail'])->name('clt-layup.detail');
     Route::patch('clt-layup/{id}/status', [CltLayupController::class, 'updateStatus'])->name('clt-layup.status');
     Route::post('clt-layup/{id}/restore', [CltLayupController::class, 'restore'])->name('clt-layup.restore');
+    Route::post('clt-layup/{id}/layers/sync', [\App\Http\Controllers\CltLayerController::class, 'syncLayers'])->name('clt-layup.layers.sync');
     Route::resource('clt-layup', CltLayupController::class);
 });
 
