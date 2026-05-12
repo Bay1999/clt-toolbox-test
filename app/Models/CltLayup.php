@@ -19,6 +19,11 @@ class CltLayup extends Model
         'is_active',
     ];
 
+    protected $casts = [
+        'is_active' => 'integer',
+        'revision_counter' => 'integer',
+    ];
+
     public function supplier(): BelongsTo
     {
         return $this->belongsTo(Supplier::class);

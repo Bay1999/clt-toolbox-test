@@ -17,6 +17,14 @@ class AppServiceProvider extends ServiceProvider
             SupplierInterface::class,
             SupplierRepository::class
         );
+        $this->app->bind(
+            \App\Interfaces\CltLayupInterface::class,
+            \App\Repositories\CltLayupRepository::class
+        );
+        $this->app->bind(
+            \App\Interfaces\CltLayerInterface::class,
+            \App\Repositories\CltLayerRepository::class
+        );
     }
 
     /**

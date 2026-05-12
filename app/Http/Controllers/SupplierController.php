@@ -74,7 +74,9 @@ class SupplierController extends Controller
      */
     public function show(Supplier $supplier)
     {
-        //
+        $data = $this->supplierService->getShowData($supplier->id);
+
+        return view('supplier.show', $data);
     }
 
     /**

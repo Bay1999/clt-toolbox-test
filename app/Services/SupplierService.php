@@ -95,4 +95,12 @@ class SupplierService
         $this->getById($id);
         return $this->supplierInterface->delete($id);
     }
+
+    public function getShowData(int $id)
+    {
+        $data = [
+            'supplier' => $this->getById($id),
+        ];
+        return $data;
+    }
 }

@@ -98,7 +98,7 @@
             $(document).ready(function() {
                 const table = $('#suppliers-table').DataTable({
                     processing: true,
-                    serverSide: false,
+                    serverSide: true,
                     autoWidth: false,
                     width: '100%',
                     ajax: {
