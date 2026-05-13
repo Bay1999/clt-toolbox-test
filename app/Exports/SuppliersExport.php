@@ -2,11 +2,9 @@
 
 namespace App\Exports;
 
-use Maatwebsite\Excel\Concerns\FromCollection;
-use Maatwebsite\Excel\Concerns\WithHeadings;
-use Maatwebsite\Excel\Concerns\WithMapping;
+use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 
-class SuppliersExport implements FromCollection, WithHeadings, WithMapping
+class SuppliersExport implements WithMultipleSheets
 {
     protected $suppliers;
 
@@ -15,28 +13,14 @@ class SuppliersExport implements FromCollection, WithHeadings, WithMapping
         $this->suppliers = $suppliers;
     }
 
-    public function collection()
+    public function sheets(): array
     {
-        return $this->suppliers;
-    }
+        $sheets = [];
 
-    public function headings(): array
-    {
-        return [
-            'ID',
-            'Name',
-            'Total Layups',
-            'Created At',
-        ];
-    }
+        foreach ($this->suppliers as $supplier) {
+            $sheets[] = new SupplierSheetExport($supplier);
+        }
 
-    public function map($supplier): array
-    {
-        return [
-            'SUP-' . $supplier->created_at->format('Y') . '-' . str_pad($supplier->id, 3, '0', STR_PAD_LEFT),
-            $supplier->name,
-            $supplier->clt_layups_count,
-            $supplier->created_at->format('M d, Y'),
-        ];
+        return $sheets;
     }
 }

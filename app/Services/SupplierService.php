@@ -49,7 +49,12 @@ class SupplierService
 
     public function export(?string $search = null)
     {
-        $suppliers = $this->supplierInterface->getDataTable($search)->get();
+        $suppliers = $this->supplierInterface->getDataTable($search)
+            ->with(['cltLayups' => function($query) {
+                $query->where('is_active', 1); // Only Active layups
+            }, 'cltLayups.cltLayers'])
+            ->get();
+            
         return Excel::download(new SuppliersExport($suppliers), 'suppliers_export.xlsx');
     }
 
