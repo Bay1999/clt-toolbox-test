@@ -309,12 +309,6 @@
                 $('#layup-search').on('keyup', function() {
                     table.ajax.reload();
                 });
-
-                // Export button
-                $('#export-layups-button').on('click', function() {
-                    const search = $('#layup-search').val();
-                    window.location.href = `{{ route('supplier.export') }}?search=${search}`; // Wait, should this be layup export?
-                });
             });
 
             function changeStatus(id, isActive) {
@@ -547,6 +541,11 @@
                         }
                     }
                 });
+            });
+
+            $('#export-layups-button').on('click', function() {
+                const supplierId = "{{ $supplier->id }}";
+                window.location.href = `/clt-layup/supplier/${supplierId}/export-template`;
             });
         </script>
     @endpush

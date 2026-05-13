@@ -223,4 +223,14 @@ class CltLayupController extends Controller
             ], 500);
         }
     }
+
+    public function exportTemplateBySupplier(int $supplierId)
+    {
+        try {
+            return $this->cltLayupService->exportTemplateBySupplier($supplierId);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return back()->with('error', 'Failed to export layup template');
+        }
+    }
 }

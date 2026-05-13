@@ -26,6 +26,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('clt-layup/{id}/detail', [CltLayupController::class, 'getDetail'])->name('clt-layup.detail');
     Route::patch('clt-layup/{id}/status', [CltLayupController::class, 'updateStatus'])->name('clt-layup.status');
     Route::post('clt-layup/{id}/restore', [CltLayupController::class, 'restore'])->name('clt-layup.restore');
+    Route::get('clt-layup/supplier/{supplier_id}/export-template', [CltLayupController::class, 'exportTemplateBySupplier'])->name('clt-layup.export-template');
     Route::post('clt-layup/{id}/layers/sync', [\App\Http\Controllers\CltLayerController::class, 'syncLayers'])->name('clt-layup.layers.sync');
     Route::resource('clt-layup', CltLayupController::class);
 });

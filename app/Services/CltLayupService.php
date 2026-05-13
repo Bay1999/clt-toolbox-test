@@ -116,4 +116,16 @@ class CltLayupService
         ];
         return $data;
     }
+
+    public function exportTemplateBySupplier(int $supplierId)
+    {
+        $layups = $this->cltLayupInterface->getBySupplierId($supplierId)
+            ->with('cltLayers')
+            ->get();
+
+        return \Maatwebsite\Excel\Facades\Excel::download(
+            new \App\Exports\CltLayupTemplateExport($supplierId, $layups), 
+            'layup_template_' . now()->format('YmdHis') . '.xlsx'
+        );
+    }
 }
