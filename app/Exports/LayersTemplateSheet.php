@@ -27,6 +27,7 @@ class LayersTemplateSheet implements FromCollection, WithHeadings, WithMapping, 
             $sortedLayers = $layup->cltLayers->sortBy('layer_order');
             
             foreach ($sortedLayers as $layer) {
+                $layer->setRelation('cltLayup', $layup);
                 $layers->push($layer);
             }
         }
@@ -37,7 +38,7 @@ class LayersTemplateSheet implements FromCollection, WithHeadings, WithMapping, 
     public function headings(): array
     {
         return [
-            'Layup ID',
+            'Layup Name',
             'Layer Order',
             'Thickness (mm)',
             'Width (mm)',
@@ -53,7 +54,7 @@ class LayersTemplateSheet implements FromCollection, WithHeadings, WithMapping, 
         }
 
         return [
-            $layer->layup_id,
+            $layer->cltLayup->name ?? '',
             $layer->layer_order,
             $layer->thickness,
             $layer->width,

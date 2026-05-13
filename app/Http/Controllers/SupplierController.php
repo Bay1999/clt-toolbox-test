@@ -77,7 +77,6 @@ class SupplierController extends Controller
         
         try {
             $data = $this->supplierService->getShowData($supplier->id);
-            // dd($data);
             return view('supplier.show', $data);
         } catch (InvalidAppFlowException $e) {
             abort(404, $e->getMessage());

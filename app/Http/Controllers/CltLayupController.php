@@ -233,4 +233,67 @@ class CltLayupController extends Controller
             return back()->with('error', 'Failed to export layup template');
         }
     }
+
+    public function import(Request $request, int $supplierId)
+    {
+        try {
+            $request->validate([
+                'file' => 'required|file|mimes:xlsx,xls'
+            ]);
+
+            $result = $this->cltLayupService->import($supplierId, $request->file('file'));
+
+            if ($result['status'] === 'conflicts') {
+                return response()->json([
+                    'status' => 'success_with_conflicts',
+                    'conflicts' => $result['data'],
+                ], 200);
+            }
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Layups imported successfully'
+            ], 200);
+
+        } catch (InvalidAppFlowException $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Failed to import layups: ' . $e->getMessage()
+            ], 400);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage() . ' on line ' . $e->getLine() . ' on file ' . $e->getFile());
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Internal server error'
+            ], 500);
+        }
+    }
+
+    public function resolveImport(Request $request, int $supplierId)
+    {
+        try {
+            $request->validate([
+                'resolutions' => 'required|array'
+            ]);
+
+            $result = $this->cltLayupService->resolveImport($supplierId, $request->input('resolutions'));
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Conflicts resolved and layups imported successfully'
+            ], 200);
+
+        } catch (InvalidAppFlowException $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Failed to resolve conflicts: ' . $e->getMessage()
+            ], 400);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage() . ' on line ' . $e->getLine() . ' on file ' . $e->getFile());
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Internal server error'
+            ], 500);
+        }
+    }
 }

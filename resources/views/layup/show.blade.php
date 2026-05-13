@@ -73,7 +73,7 @@
         </div>
     </div>
 
-    <div class="py-12" x-data="layupBuilder(@js($layup->cltLayers), {{ $layup->id }})" @trigger-sync.window="syncLayers">
+    <div class="py-12" x-data="layupBuilder(@js($layup->cltLayers->map(fn($layer) => $layer->withoutRelations()->toArray())), {{ $layup->id }})" @trigger-sync.window="syncLayers">
         <div class="max-w-6xl mx-auto sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
                 <!-- Left Column: Layer Composition -->

@@ -28,8 +28,6 @@ class LayupsTemplateSheet implements FromCollection, WithHeadings, WithMapping, 
     public function headings(): array
     {
         return [
-            'Supplier ID',
-            'Layup ID',
             'Layup Name',
             'Layup Grade',
             'Is Active (1/0)',
@@ -39,12 +37,10 @@ class LayupsTemplateSheet implements FromCollection, WithHeadings, WithMapping, 
     public function map($layup): array
     {
         if (!$layup) {
-            return [$this->supplierId, '', '', '', ''];
+            return ['', '', ''];
         }
 
         return [
-            $this->supplierId,
-            $layup->id,
             $layup->name,
             $layup->grade,
             $layup->is_active,
