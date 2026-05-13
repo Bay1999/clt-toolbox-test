@@ -23,10 +23,6 @@
                             <i class="fa-solid fa-arrow-left"></i>
                             Back
                         </a>
-                        <button class="px-4 py-1 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                            <i class="fa-regular fa-copy"></i>
-                            Duplicate
-                        </button>
                         <button id="save-changes-btn" onclick="window.dispatchEvent(new CustomEvent('trigger-sync'))" class="px-4 py-1 rounded-lg bg-[var(--main-color)] dark:bg-[var(--dark-main-color)] text-white hover:opacity-90 transition-opacity">
                             <i class="fa-regular fa-floppy-disk"></i>
                             Save Changes
@@ -298,6 +294,8 @@
                 layers: initialLayers || [],
                 layupId: layupId,
                 isModalOpen: false,
+                isSyncing: false,
+                isSubmitting: false,
                 editingIndex: null,
                 formData: {
                     thickness: '',
@@ -370,6 +368,9 @@
                 },
                 
                 saveLayer() {
+                    if (this.isSubmitting) return;
+                    this.isSubmitting = true;
+
                     if (this.editingIndex !== null) {
                         // Use splice for better reactivity in some edge cases
                         this.layers.splice(this.editingIndex, 1, { 
@@ -383,6 +384,7 @@
                         });
                     }
                     this.closeModal();
+                    this.isSubmitting = false;
                 },
                 
                 deleteLayer(index) {
@@ -402,6 +404,9 @@
                 },
                 
                 syncLayers() {
+                    if (this.isSyncing) return;
+                    this.isSyncing = true;
+
                     const btn = document.getElementById('save-changes-btn');
                     const originalHtml = btn.innerHTML;
                     btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Saving...';
@@ -442,6 +447,9 @@
                         btn.innerHTML = originalHtml;
                         btn.disabled = false;
                         Swal.fire('Error', error.message, 'error');
+                    })
+                    .finally(() => {
+                        this.isSyncing = false;
                     });
                 },
                 
